@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">SminqAssesment</string>
+    <string name="app_name">Sminq Restaurant Finder</string>
+    <string name="places_api_key">AIzaSyDiEa6iX8GenUTrL3BugVA-74AMyLeXUlE</string>
+
+    <!--
+    https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=18.516726,73.856255
+    &radius=1000&type=restaurant&key=AIzaSyDiEa6iX8GenUTrL3BugVA-74AMyLeXUlE
+    -->
+
+    <string name="title_location_permission">Require location permission</string>
+    <string name="text_location_permission">Please grant location permission</string>
+    <string name="ok">OK</string>
+
+
 </resources>

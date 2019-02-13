@@ -1,0 +1,18 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            tools:context=".view.RestaurantListFragment"
+            android:id="@+id/swipe_refresh">
+
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/listFacts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+</layout>
