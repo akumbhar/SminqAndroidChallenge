@@ -13,7 +13,4 @@
     <string name="internet_unavailable">"Internet unavailable. Showing data from cache."</string>
     <string name="cache_empty">"Empty cache. Please check check internet connectivity and try again."</string>
     <string name="type">"restaurant"</string>
-
-
-
 </resources>

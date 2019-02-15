@@ -10,7 +10,7 @@ import com.sminq.android.sminqassesment.repository.db.AppDatabase
 /**
  * Factory class that initialize ViewModel constructor parameters
  */
-class FactViewModelFactory(private val context: Application) : ViewModelProvider.Factory {
+class RestaurantViewModelFactory(private val context: Application) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         var repository = RestaurantRepository(RestaurantNetworkDataSource(),

@@ -13,13 +13,15 @@ class RestaurantViewModel(restaurantRepository: RestaurantRepository) : ViewMode
     private lateinit var restaurantList: LiveData<List<Restaurant>>
     private val restaurantRepository: RestaurantRepository = restaurantRepository
 
-    public fun fetchRestaurantList(lat: Double, log: Double, apiKey: String, radius: Int, type: String) {
+    public fun fetchRestaurantList(
+        lat: Double,
+        log: Double,
+        apiKey: String,
+        radius: Int,
+        type: String
+    ): LiveData<List<Restaurant>> {
 
-        restaurantRepository.getRestaurantsListFromApi(lat, log, apiKey, radius, type)
-    }
-
-    fun getRestaurantList(): LiveData<List<Restaurant>> {
-        return restaurantList
+        return restaurantRepository.getRestaurantList(lat, log, apiKey, radius, type)
     }
 
 
