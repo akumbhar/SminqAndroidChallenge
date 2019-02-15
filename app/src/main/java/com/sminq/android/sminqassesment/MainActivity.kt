@@ -29,7 +29,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         //checkLocationPermission()
+
+        //fetchDataFromRepository()
     }
+
+
 
     private fun checkLocationPermission() {
 

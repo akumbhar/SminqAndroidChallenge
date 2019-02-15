@@ -1,12 +1,17 @@
 package com.sminq.android.sminqassesment.view
 
+import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.sminq.android.sminqassesment.R
+import com.sminq.android.sminqassesment.repository.RestaurantRepository
+import com.sminq.android.sminqassesment.repository.api.RestaurantNetworkDataSource
+import com.sminq.android.sminqassesment.repository.db.AppDatabase
 import com.sminq.android.sminqassesment.viewmodel.RestaurantViewModel
 import kotlinx.android.synthetic.main.fragment_restaurant_list.*
 
@@ -42,36 +47,66 @@ class RestaurantListFragment : Fragment() {
         binding.swipeRefresh.setOnRefreshListener {
             fetchDataFromRepository()
         }*/
+        fetchDataFromRepository();
         return view
     }
 
-    /*fun fetchDataFromRepository() {
 
-        if(!ConnectivityUtils.isNetworkAvailable(activity?.applicationContext!!)){
-            showToast(getString(R.string.internet_unavailable))
-        }
-        viewModel.getFactList().observe(this, Observer { factList ->
+    fun fetchDataFromRepository() {
 
-            Log.e("RestaurantListFragment", "In observer :: fact size"+ factList?.size);
-            adapter.swapList(factList)
-            if (factList != null && factList.size != 0){
-                hideLoading()
-            }
-            else{
-                if(ConnectivityUtils.isNetworkAvailable(activity?.applicationContext!!)) {
-                    showLoading()
-                }else{
-                    showToast(getString(R.string.cache_empty))
-                    if(swipe_refresh.isRefreshing){
-                        hideLoading()
-                    }
+        val lat = 18.516726
+        val log = 73.856255
+        val key = getString(R.string.places_api_key)
+        val radius = 1000
+        val type = "restaurant"
+
+        var repository = RestaurantRepository(RestaurantNetworkDataSource(), AppDatabase.getInstance(activity!!.applicationContext)!!.restaurantDao());
+
+        repository.getRestaurantList(lat,log,key,radius,type).observe(this, Observer { factList ->
+
+            factList?.let{
+
+                for(item in it){
+
+
+                    Log.e("FactsFragment", "In observer :: fact size"+ item);
                 }
             }
+
+
         })
-        viewModel.getAppTitle().observe(this, Observer { appTitle ->
-            (activity as FactsActivity).title = appTitle?.title;
-        })
-    }*/
+
+    }
+
+
+
+        /*fun fetchDataFromRepository() {
+
+            if(!ConnectivityUtils.isNetworkAvailable(activity?.applicationContext!!)){
+                showToast(getString(R.string.internet_unavailable))
+            }
+            viewModel.getFactList().observe(this, Observer { factList ->
+
+                Log.e("RestaurantListFragment", "In observer :: fact size"+ factList?.size);
+                adapter.swapList(factList)
+                if (factList != null && factList.size != 0){
+                    hideLoading()
+                }
+                else{
+                    if(ConnectivityUtils.isNetworkAvailable(activity?.applicationContext!!)) {
+                        showLoading()
+                    }else{
+                        showToast(getString(R.string.cache_empty))
+                        if(swipe_refresh.isRefreshing){
+                            hideLoading()
+                        }
+                    }
+                }
+            })
+            viewModel.getAppTitle().observe(this, Observer { appTitle ->
+                (activity as FactsActivity).title = appTitle?.title;
+            })
+        }*/
 
     private fun showLoading() {
         swipe_refresh.isRefreshing = true

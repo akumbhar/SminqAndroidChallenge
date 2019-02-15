@@ -10,6 +10,10 @@
     <string name="title_location_permission">Require location permission</string>
     <string name="text_location_permission">Please grant location permission</string>
     <string name="ok">OK</string>
+    <string name="internet_unavailable">"Internet unavailable. Showing data from cache."</string>
+    <string name="cache_empty">"Empty cache. Please check check internet connectivity and try again."</string>
+    <string name="type">"restaurant"</string>
+
 
 
 </resources>
