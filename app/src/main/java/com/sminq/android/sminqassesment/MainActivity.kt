@@ -1,83 +1,113 @@
 package com.sminq.android.sminqassesment
 
-import android.Manifest
-import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.widget.Toast
+import android.util.Log
 import com.sminq.android.sminqassesment.view.RestaurantListFragment
 
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
-
         val MY_PERMISSIONS_REQUEST_LOCATION = 101
+        val TAG:String = MainActivity.javaClass.simpleName
+        val INTERVAL = 1000.toLong() // In milliseconds
+        val DISTANCE = 10.toFloat() // In meters
+
+        val locationListeners = arrayOf(
+            LTRLocationListener(LocationManager.GPS_PROVIDER),
+            LTRLocationListener(LocationManager.NETWORK_PROVIDER)
+        )
+
+
+        class LTRLocationListener(provider: String) : android.location.LocationListener {
+
+            val lastLocation = Location(provider)
+            override fun onLocationChanged(location: Location?) {
+                lastLocation.set(location)
+            }
+
+            override fun onProviderDisabled(provider: String?) {
+            }
+
+            override fun onProviderEnabled(provider: String?) {
+            }
+
+            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+            }
+        }
 
     }
 
+    private lateinit var  mLocationManager : LocationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.frag_container, RestaurantListFragment()).commit()
         }
-
-        //checkLocationPermission()
-
-        //fetchDataFromRepository()
+        mLocationManager = getSystemService(LOCATION_SERVICE) as LocationManager
     }
 
 
 
-    private fun checkLocationPermission() {
+    private fun startLocationUpdates() {
+
+        try {
+
+            mLocationManager?.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER,
+                INTERVAL,
+                DISTANCE,
+                locationListeners[1]
+            )
+
+        } catch (e: SecurityException) {
+
+            Log.e(TAG, "Fail to request location update", e)
+
+        } catch (e: IllegalArgumentException) {
+
+            Log.e(TAG, "Network provider does not exist", e)
+
+        }
 
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
 
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+        try {
+            mLocationManager?.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                INTERVAL,
+                DISTANCE,
+                locationListeners[0]
+            )
 
-                ActivityCompat.requestPermissions(
-                    this@MainActivity,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    MY_PERMISSIONS_REQUEST_LOCATION
-                )
+        } catch (e: SecurityException) {
 
-            } else {
-                ActivityCompat.requestPermissions(
-                    this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    MY_PERMISSIONS_REQUEST_LOCATION
-                )
-            }
+            Log.e(TAG, "Fail to request location update", e)
+
+        } catch (e: IllegalArgumentException) {
+
+            Log.e(TAG, "GPS provider does not exist", e)
+
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        when (requestCode) {
-            MY_PERMISSIONS_REQUEST_LOCATION -> {
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+    private fun stopLocationUpdates() {
 
-                    showToast("MY_PERMISSIONS_REQUEST_LOCATION - If")
+        if (mLocationManager != null)
 
-                } else {
-
-                    showToast("MY_PERMISSIONS_REQUEST_LOCATION - else")
+            for (i in 0..locationListeners.size) {
+                try {
+                    mLocationManager?.removeUpdates(locationListeners[i])
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to remove location listeners")
                 }
-                return
             }
 
-
-        }
-    }
-
-    fun showToast(text: String) {
-
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 }
